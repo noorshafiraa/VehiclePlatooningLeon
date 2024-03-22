@@ -24,28 +24,7 @@ from matplotlib.animation import FuncAnimation
 import math as m
 import random
 
-
-# fig = plt.figure(2)
-
-# axis = plt.axes(xlim=(-50,50),
-				# ylim=(-50,50))
-				
-# line, = axis.plot([], [], lw = 3)
-# def init():
-	# line.set_data([],[])
-	# return line,
-	
-# xdata, ydata = [], []
-
-# def animate(i):
-	# x = [fol_pos_list[i],ghost_data[i,3]]
-	# y = [fol_pos_list[i],ghost_data[i,4]]
-	
-	# xdata.append(x)
-	# ydata.append(y)
-	# line.set_data(xdata,ydata)
-	# return line,
-
+#mmmmm
 class Buffer:
 	def __init__(self, buffer_capacity=int(1e6), batch_size=64, num_states=9, num_actions=2): #Previously 64 batch size 50000 buffer cap
 		#Number of "experiences" to store at max
@@ -121,7 +100,7 @@ class Buffer:
 		next_state_batch = tf.convert_to_tensor(self.next_state_buffer[batch_indices])
 		
 		self.update(state_batch, action_batch, reward_batch, next_state_batch)
-
+#sssss
 if __name__ == "__main__":
 
 	# Initialize the donkey environment
@@ -144,11 +123,11 @@ if __name__ == "__main__":
 		"--sim",
 		type=str,
 		#default= "D:\Kuliah\S2\S2_Proposal_Thesis\DonkeyProject\DonkeySimWin\donkey_sim.exe",
-		default= "D:\Tesis\DonkeySimWin\donkey_sim.exe",
+		default= "remote",
 		help="path to unity simulator. maybe be left at manual if you would like to start the sim on your own.",
 	)
 	parser.add_argument("--port", type=int, default=9091, help="port to use for tcp")
-	parser.add_argument("--test", action="store_true", help="load the trained model and play")
+	parser.add_argument("--train", action="store_true", help="load the trained model and play")
 	parser.add_argument("--multi", action="store_true", help="start multiple sims at once")
 	parser.add_argument(
 		"--env_name", type=str, default="donkey-generated-roads-v0", help="name of donkey sim environment", choices=env_list
@@ -178,7 +157,9 @@ if __name__ == "__main__":
 	}
 	# ghost_data = np.genfromtxt('meta_data_speed_stable_8.txt',delimiter=',',encoding='utf-8-sig',skip_header=1) #Steering,Throttle,Speed,PosZ,PosX
 	# ghost_data[:,1] = 0.06 * ghost_data[:,1]
-	# Initialize		
+	# Initialize
+
+#mmmmm    
 	env2 = gym.make(args.env_name, conf=conf2)
 	num_actions = env2.action_space.shape[0]
 
@@ -196,27 +177,12 @@ if __name__ == "__main__":
 	ou_noise_st = Class_Train_DDPG_path_optimize.OUActionNoise(mean=np.zeros(1), std_deviation=float(std_dev_st)* np.ones(1), theta=0.15, mult = 0.5)
 	state_size = 9
 	num_states = np.zeros(state_size).shape[0]
-	
-	if args.test:
+#sssss
+#mmmmm
+	if args.train:
 		#Early Termination flag
 		end = False
 		
-		#Load Ghost
-		# ghost_data = np.genfromtxt('meta_data_speed_stable_8.txt',delimiter=',',encoding='utf-8-sig',skip_header=1) #Steering,Throttle,Speed,PosZ,PosX
-		# # ghost_data[:,1] = 0.06 * ghost_data[:,1]
-		# # Initialize		
-		# env2 = gym.make(args.env_name, conf=conf2)
-		# num_actions = env2.action_space.shape[0]
-
-		# upper_bound = env2.action_space.high[0]
-		# lower_bound = env2.action_space.low[0]
-		# std_dev_th = 0.6
-		# std_dev_st = 0.1
-		# ou_noise_th = Class_Train_DDPG_path_optimize.OUActionNoise(mean=np.zeros(1), std_deviation=float(std_dev_th)* np.ones(1), theta=0.15)
-		# ou_noise_st = Class_Train_DDPG_path_optimize.OUActionNoise(mean=np.zeros(1), std_deviation=float(std_dev_st)* np.ones(1), theta=0.15)
-		# state_size = 9
-		# num_states = np.zeros(state_size).shape[0]
-		#In case want to continue the train
 		if os.path.isfile("cacc_actor_loc_best.h5"):
 			actor_model = keras.models.load_model("cacc_actor_loc_best.h5")
 			critic_model = keras.models.load_model('cacc_critic_loc_best.h5')
@@ -261,6 +227,8 @@ if __name__ == "__main__":
 		# Used to update target networks
 		tau = 1e-3
 		buffer = Buffer(int(1e6), 64, num_states, num_actions)
+#sssss
+#mmmmm
 		ep_reward_list = []
 		avg_reward_list = []
 		long_err_list = []
