@@ -24,7 +24,7 @@ from matplotlib.animation import FuncAnimation
 import math as m
 import random
 
-#mmmmm
+
 class Buffer:
 	def __init__(self, buffer_capacity=int(1e6), batch_size=64, num_states=9, num_actions=2): #Previously 64 batch size 50000 buffer cap
 		#Number of "experiences" to store at max
@@ -100,7 +100,7 @@ class Buffer:
 		next_state_batch = tf.convert_to_tensor(self.next_state_buffer[batch_indices])
 		
 		self.update(state_batch, action_batch, reward_batch, next_state_batch)
-#sssss
+
 if __name__ == "__main__":
 
 	# Initialize the donkey environment
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 	# ghost_data[:,1] = 0.06 * ghost_data[:,1]
 	# Initialize
 
-#mmmmm    
+    
 	env2 = gym.make(args.env_name, conf=conf2)
 	num_actions = env2.action_space.shape[0]
 
@@ -177,8 +177,8 @@ if __name__ == "__main__":
 	ou_noise_st = Class_Train_DDPG_path_optimize.OUActionNoise(mean=np.zeros(1), std_deviation=float(std_dev_st)* np.ones(1), theta=0.15, mult = 0.5)
 	state_size = 9
 	num_states = np.zeros(state_size).shape[0]
-#sssss
-#mmmmm
+
+
 	if args.train:
 		#Early Termination flag
 		end = False
@@ -227,8 +227,8 @@ if __name__ == "__main__":
 		# Used to update target networks
 		tau = 1e-3
 		buffer = Buffer(int(1e6), 64, num_states, num_actions)
-#sssss
-#mmmmm
+
+
 		ep_reward_list = []
 		avg_reward_list = []
 		long_err_list = []
