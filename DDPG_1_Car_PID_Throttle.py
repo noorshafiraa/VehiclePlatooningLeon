@@ -15,6 +15,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 from simple_pid import PID
+from stable_baselines3 import PPO
 
 if __name__ == "__main__":
 
@@ -37,11 +38,11 @@ if __name__ == "__main__":
 	parser.add_argument(
 		"--sim",
 		type=str,
-		default= "D:\Kuliah\S2\S2_Proposal_Thesis\DonkeyProject\DonkeySimWin\donkey_sim.exe",
-		# default= "D:\Tesis\DonkeySimWin\donkey_sim.exe",
+		default= "remote",
+		# default= "remote",
 		help="path to unity simulator. maybe be left at manual if you would like to start the sim on your own.",
 	)
-	parser.add_argument("--port", type=int, default=9093, help="port to use for tcp")
+	parser.add_argument("--port", type=int, default=9091, help="port to use for tcp")
 	parser.add_argument("--test", action="store_true", help="load the trained model and play")
 	parser.add_argument("--multi", action="store_true", help="start multiple sims at once")
 	parser.add_argument(
@@ -146,36 +147,36 @@ if __name__ == "__main__":
 						# file.write(', '.join(map(str,meta_data)))
 
 	# if args.test:
-		# plot_speed = []
-		# plt_speed = np.zeros([10,20])
-		# # Make an environment test our trained policy
-		# env = gym.make(args.env_name, conf=conf)
-		# model = PPO.load("ppo_donkey_gen3_2")
-		# throttle = 0.1
-		# obs = env.reset()
-		# for ep in range(10):
-			# action = [0 , throttle + (0.1 * ep)]
-			# for _ in range(20):
-				# start = timeit.default_timer()
-				# # action, _states = model.predict(obs, deterministic=True)
-				# obs, reward, done, info = env.step(action)
-				# print("Speed: ", info['speed'])
-				# plot_speed.append(info['speed'])
-				# env.render()
-				# stop = timeit.default_timer()
-				# print("Time: ", stop-start)
-			# # plot_speed = np.array(plot_speed)
-			# # np.savetxt('plot_speed{:03}.txt'.format(ep),delimiter=',')
-			# obs = env.reset()
-			# print("Speed: ", plot_speed)
-			# print("Torque used: ", action[1])
-			# plt.plot(plot_speed)
-			# plt_speed[ep] = plot_speed
-			# plot_speed = []
-			# print(plt_speed)
-		# np.savetxt('plot_speed.txt',plt_speed,delimiter=',')
-		# plt.show()
-		# print("done testing")
+	# 	plot_speed = []
+	# 	plt_speed = np.zeros([10,20])
+	# 	# Make an environment test our trained policy
+	# 	env = gym.make(args.env_name, conf=conf)
+	# 	model = PPO.load("ppo_donkey_gen3_3")
+	# 	throttle = 0.1
+	# 	obs = env.reset()
+	# 	for ep in range(2000):
+	# 		action = [0 , throttle + (0.1 * ep)]
+	# 		for _ in range(20):
+	# 			start = timeit.default_timer()
+	# 			# action, _states = model.predict(obs, deterministic=True)
+	# 			obs, reward, done, info = env.step(action)
+	# 			print("Speed: ", info['speed'])
+	# 			plot_speed.append(info['speed'])
+	# 			env.render()
+	# 			stop = timeit.default_timer()
+	# 			print("Time: ", stop-start)
+	# 		# plot_speed = np.array(plot_speed)
+	# 		# np.savetxt('plot_speed{:03}.txt'.format(ep),delimiter=',')
+	# 		obs = env.reset()
+	# 		print("Speed: ", plot_speed)
+	# 		print("Torque used: ", action[1])
+	# 		plt.plot(plot_speed)
+	# 		plt_speed[ep] = plot_speed
+	# 		plot_speed = []
+	# 		print(plt_speed)
+	# 	np.savetxt('plot_speed.txt',plt_speed,delimiter=',')
+	# 	plt.show()
+	# 	print("done testing")
 		
 	else:
 
