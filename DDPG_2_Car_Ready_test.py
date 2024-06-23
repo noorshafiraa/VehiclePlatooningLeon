@@ -24,7 +24,6 @@ from matplotlib.animation import FuncAnimation
 import math as m
 import random
 
-
 class Buffer:
 	def __init__(self, buffer_capacity=int(1e6), batch_size=64, num_states=9, num_actions=2): #Previously 64 batch size 50000 buffer cap
 		#Number of "experiences" to store at max
@@ -104,7 +103,6 @@ class Buffer:
 if __name__ == "__main__":
 
 	# Initialize the donkey environment
-	# where env_name one of:
 	env_list = [
 		"donkey-warehouse-v0",
 		"donkey-generated-roads-v0",
@@ -122,8 +120,13 @@ if __name__ == "__main__":
 	parser.add_argument(
 		"--sim",
 		type=str,
-		#default= "D:\Kuliah\S2\S2_Proposal_Thesis\DonkeyProject\DonkeySimWin\donkey_sim.exe",
-		default= "remote",
+
+        # There are two ways to open simulator :
+        # use "remote" to open manually or 
+        # declare your simulator path to open automatically
+        default= "remote",
+        # default= "<YOUR PATH>"
+
 		help="path to unity simulator. maybe be left at manual if you would like to start the sim on your own.",
 	)
 	parser.add_argument("--port", type=int, default=9091, help="port to use for tcp")
@@ -155,11 +158,7 @@ if __name__ == "__main__":
 		"guid": str(uuid.uuid4()),
 		"max_cte": 10,
 	}
-	# ghost_data = np.genfromtxt('meta_data_speed_stable_8.txt',delimiter=',',encoding='utf-8-sig',skip_header=1) #Steering,Throttle,Speed,PosZ,PosX
-	# ghost_data[:,1] = 0.06 * ghost_data[:,1]
-	# Initialize
-
-    
+	
 	env2 = gym.make(args.env_name, conf=conf2)
 	num_actions = env2.action_space.shape[0]
 
@@ -170,15 +169,11 @@ if __name__ == "__main__":
 	std_dev_th = 0.6
 	std_dev_st = 0.1
 	
-	#If the testing ground stopped midway edit below
-	# std_dev_th = 0.31022484
-	# std_dev_st = 0.05170414
 	ou_noise_th = Class_Train_DDPG_path_optimize.OUActionNoise(mean=np.zeros(1), std_deviation=float(std_dev_th)* np.ones(1), theta=0.15, mult = 0.1)
 	ou_noise_st = Class_Train_DDPG_path_optimize.OUActionNoise(mean=np.zeros(1), std_deviation=float(std_dev_st)* np.ones(1), theta=0.15, mult = 0.5)
 	state_size = 9
 	num_states = np.zeros(state_size).shape[0]
-
-
+	
 	if args.train:
 		#Early Termination flag
 		end = False
@@ -227,8 +222,6 @@ if __name__ == "__main__":
 		# Used to update target networks
 		tau = 1e-3
 		buffer = Buffer(int(1e6), 64, num_states, num_actions)
-
-
 		ep_reward_list = []
 		avg_reward_list = []
 		long_err_list = []
@@ -267,7 +260,7 @@ if __name__ == "__main__":
 		#Longitudinal is Z Lateral is X
 		try:
 			for ep in range(total_episode):
-				path = np.random.randint(0,21)
+				path = np.random.randint(0,22)
 				print("Path: {}".format(path))
 				ghost_data = np.genfromtxt('route{}.txt'.format(path),delimiter=',',encoding='utf-8-sig',skip_header=1)
 				init_lead_pos_data = ghost_data[:,3]
@@ -290,13 +283,9 @@ if __name__ == "__main__":
 
 				if rand > 0.5:
 					ghost_data[:,3] = init_lead_pos_data + (0.1*init_rand)
-					# while ghost_data[step,4] - prev_pos_follow[0] >= 0.9:
-						# ghost_data[:,3:5] = init_lead_pos_data - (0.1*init_rand)
 					
 				else:
 					ghost_data[:,3] = init_lead_pos_data - (0.1*init_rand)
-					# while ghost_data[step,4] - prev_pos_follow[0] <= 0.7:
-						# ghost_data[:,3:5] = init_lead_pos_data + (0.1*init_rand)
 				
 				
 				err_step_long = []
@@ -371,9 +360,7 @@ if __name__ == "__main__":
 						acc_input = (prev_act[1]/0.06)**2
 						#Leader Control in Ghost Data
 						pos_lead = ghost_data[step,3:5] #PosZ,PosX
-						# print("Leader's Position: ",pos_lead)
 						lead_angle = State_Cal.steer_angle(ghost_data[step,0])
-						# print("Leader's Steering: ",np.degrees(lead_angle))
 						
 						#Follower Control
 						tf_prev_state = tf.expand_dims(tf.convert_to_tensor(state), 0)
@@ -540,21 +527,11 @@ if __name__ == "__main__":
 		axs[1].plot(long_err_list,label="Avg.")
 		axs[1].plot(long_err_max,alpha=0.5,label="Max R")
 		axs[1].plot(long_err_min,alpha=0.5,label="Max L")
-		# axs[1].legend(loc="upper right")
 		axs[2].plot(lat_err_list,label="Avg.")
 		axs[2].plot(lat_err_max,alpha=0.5,label="Max R")
 		axs[2].plot(lat_err_min,alpha=0.5,label="Max L")
-		# axs[2].legend(loc="upper right")
 		axs[3].plot(step_max)
-		# axs[0].set(ylabel="Avg. Reward")
-		# axs[1].set(ylabel="Avg. Longitude Error")
-		# axs[2].set(ylabel="Avg. Latitude Error")
-		# axs[3].set(xlabel="Episode", ylabel="Total Step")
-		# axs[0].grid()
-		# axs[1].grid()
-		# axs[2].grid()
-		# axs[3].grid()
-		# fig.tight_layout()
+
 		fig.savefig("DDPG_Train Model.eps")
 		fig.savefig("DDPG_Train_Model.png")
 		plt.show()
@@ -575,7 +552,7 @@ if __name__ == "__main__":
 		else:
 			print("Load ANY result")
 			model = keras.models.load_model("cacc_actor_new.h5")
-		# model = keras.models.load_model("cacc_actor_loc_best.h5")
+
 		actor_lr = 1e-4
 		actor_optimizer = tf.keras.optimizers.Adam(actor_lr,clipnorm=1.0)
 		model.compile(optimizer=actor_optimizer)
@@ -610,6 +587,7 @@ if __name__ == "__main__":
 		long_err_mean = 0
 		lat_err_mean = 0
 		step = 11
+		
 		#desired distance
 		time_gap = 0.1
 		r = 0.3
@@ -686,8 +664,6 @@ if __name__ == "__main__":
 			z = (State_Cal.error(State_Cal.Rotation_Matrix(np.radians(info2['car'][2])),pos_follow[0], pos_follow[1],
 				pos_lead[0], pos_lead[1], d))
 			i_z.append(z)
-			# err_step_long.append(z[0])
-			# err_step_lat.append(z[1])
 			z_dot = (z - z_prev)/0.017
 			integ_z = 0.017 * (sum(i_z))
 			v_err = ghost_data[step,2] - v
@@ -701,14 +677,9 @@ if __name__ == "__main__":
 			z_lat.append(z[1])
 			plt.plot(z_long,'b')
 			plt.plot(z_lat,'r')
-			# plt.draw()
-			# plt.pause(.001)
 			with open("speed_data_new.txt","a") as file:
 				file.write(str(v_err))
 				file.write('\n')
-			# with open("steer_data.txt","a") as file:
-				# file.write(str(action[1]))
-				# file.write('\n')
 			with open("err_data_new.txt","a") as file:
 				file.write(str(z[0])+','+str(z[1]))
 				file.write('\n')
