@@ -42,14 +42,12 @@ class OUActionNoise:
 
 
 
-
 #This update target parameters slowly
 #Based on rate 'tau', which is much less than one
 @tf.function
 def update_target(target_weights, weights, tau):
 	for (a, b) in zip(target_weights, weights):
 		a.assign(b*tau+a*(1-tau))
-
 
 def get_actor(num_states):
 	# Initialize weights between -3e-3 and 3-e3
