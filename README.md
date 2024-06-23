@@ -1,6 +1,9 @@
 
 # VehiclePlatooningLeon
 
+## Setup
+Follow this instruction https://docs.donkeycar.com/guide/deep_learning/simulator/
+
 ## Generate Training Data
 To generate training data, run:
 
