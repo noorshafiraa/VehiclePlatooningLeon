@@ -1,5 +1,5 @@
 
-# VehiclePlatooningLeon
+# Vehicle Platooning
 
 ## Setup
 Follow this instruction https://docs.donkeycar.com/guide/deep_learning/simulator/
